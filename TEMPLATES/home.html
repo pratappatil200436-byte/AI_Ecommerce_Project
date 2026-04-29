@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>SmartCart AI</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f4f4f4;
+}
+
+/* NAVBAR */
+
+.navbar{
+background:#131921;
+color:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+color:#f0c14b;
+}
+
+.nav-links a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+/* SEARCH */
+
+.search-box{
+text-align:center;
+margin:30px;
+}
+
+.search-box input{
+width:400px;
+padding:10px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+.search-box button{
+padding:10px 20px;
+background:#f0c14b;
+border:none;
+cursor:pointer;
+}
+
+/* PRODUCTS */
+
+.products{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:5px;
+padding:10px;
+}
+
+.card{
+background:white;
+border-radius:5px;
+padding:10px;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card img{
+width:120px;
+height:120px;
+object-fit:cover;
+}
+
+.price{
+color:#b12704;
+font-weight:bold;
+}
+
+.btn{
+background:#f0c14b;
+border:none;
+padding:8px 15px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.section-title{
+margin-left:20px;
+margin-top:40px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">SmartCart AI</div>
+
+<div class="nav-links">
+
+<a href="/">Home</a>
+<a href="/cart">Cart</a>
+<a href="/orders">Orders</a>
+
+{% if session.get("user_id") %}
+<a href="/dashboard">Profile</a>
+<a href="/logout">Logout</a>
+{% else %}
+<a href="/login">Account</a>
+{% endif %}
+
+</div>
+
+</div>
+
+
+<!-- SEARCH BAR -->
+
+<div class="search-box">
+
+<form action="/search" method="GET">
+
+<input type="text" name="search" placeholder="Search products...">
+
+<button type="submit">Search</button>
+
+</form>
+
+</div>
+
+
+
+<!-- AI RECOMMENDED -->
+
+{% if recommended_products %}
+
+<h2 class="section-title">🤖 AI Recommended For You</h2>
+
+<div class="products">
+
+{% for product in recommended_products %}
+
+<div class="card">
+
+<img src="{{ url_for('static', filename=product['image']) }}">
+
+<h3>{{ product['name'] }}</h3>
+
+<div class="price">₹ {{ product['price'] }}</div>
+
+<a href="/add_to_cart/{{ product['id'] }}">
+<button class="btn">Add to Cart</button>
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endif %}
+
+
+
+<!-- CATEGORY WISE PRODUCTS -->
+
+{% for category, items in category_products.items() %}
+
+<h2 class="section-title">{{ category }}</h2>
+
+<div class="products">
+
+{% for product in items %}
+
+<div class="card">
+
+<img src="{{ url_for('static', filename=product['image']) }}">
+
+<h3>{{ product['name'] }}</h3>
+
+<div class="price">₹ {{ product['price'] }}</div>
+
+<a href="/add_to_cart/{{ product['id'] }}">
+<button class="btn">Add to Cart</button>
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endfor %}
+
+
+
+</body>
+</html>
